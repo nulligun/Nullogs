@@ -69,6 +69,11 @@ class Nullogs(discord.Client):
             if before.channel.name != after.channel.name:
                 msg.append('switched from <#' + str(before.channel.id) + '> to <#' + str(after.channel.id) + '>')
 
+        if before.afk and not after.afk:
+            msg.append('is back from afk in <#' + str(after.channel.id) + '>')
+        elif not before.afk and after.afk:
+            msg.append('went afk in <#' + str(after.channel.id) + '>')
+
         if self.text_channel is not None:
             if len(msg) > 0:
                 if len(msg) == 1:
