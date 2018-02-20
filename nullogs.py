@@ -5,7 +5,7 @@ import os
 import asyncio
 
 pid = os.getpid()
-op = open("/var/run/steven.pid", "w")
+op = open("/var/run/nullogs.pid", "w")
 op.write("%s" % pid)
 op.close()
 
@@ -15,7 +15,7 @@ my_logger.setLevel(logging.INFO)
 
 
 # create a file handler
-handler = logging.FileHandler('/var/log/steven.log')
+handler = logging.FileHandler('/var/log/nullogs.log')
 handler.setLevel(logging.INFO)
 
 # create a logging format
@@ -67,7 +67,7 @@ class Nullogs(discord.Client):
             msg.append('disconnected from #' + before.channel.name)
         elif before.channel is not None and after.channel is not None:
             if before.channel.name != after.channel.name:
-                msg.append('switched from #' + before.channel.name + ' #' + after.channel.name)
+                msg.append('switched from #<' + before.channel.id + '> to #<' + after.channel.id + '>')
 
         if self.text_channel is not None:
             if len(msg) > 0:
@@ -81,6 +81,6 @@ class Nullogs(discord.Client):
                 x = 1
 
 
-config = ConfigObj(".env")
+config = ConfigObj("/var/www/nullogs/.env")
 client = Nullogs(config=config)
 client.run(config['token'])
