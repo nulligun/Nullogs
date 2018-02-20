@@ -37,7 +37,7 @@ class Nullogs(discord.Client):
             for c in g.text_channels:
                 if c.name == self.config["log_channel"]:
                     self.text_channel = c
-        my_logger.warning('Found channel')
+        my_logger.warning('Found channel : ' + str(self.text_channel.id))
 
     async def on_voice_state_update(self, member, before, after):
         msg = []
@@ -67,7 +67,7 @@ class Nullogs(discord.Client):
             msg.append('disconnected from #' + before.channel.name)
         elif before.channel is not None and after.channel is not None:
             if before.channel.name != after.channel.name:
-                msg.append('switched from #<' + before.channel.id + '> to #<' + after.channel.id + '>')
+                msg.append('switched from <#' + str(before.channel.id) + '> to <#' + str(after.channel.id) + '>')
 
         if self.text_channel is not None:
             if len(msg) > 0:
