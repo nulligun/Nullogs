@@ -4,36 +4,26 @@ import logging
 import os
 import asyncio
 
-# pid = os.getpid()
-# op = open("/var/run/steven.pid", "w")
-# op.write("%s" % pid)
-# op.close()
-#
+pid = os.getpid()
+op = open("/var/run/steven.pid", "w")
+op.write("%s" % pid)
+op.close()
+
 
 my_logger = logging.getLogger(__name__)
 my_logger.setLevel(logging.INFO)
 
-#
-# # create a file handler
-# handler = logging.FileHandler('/var/log/steven.log')
-# handler.setLevel(logging.INFO)
-#
-# # create a logging format
-# formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-# handler.setFormatter(formatter)
-#
-# # add the handlers to the logger
-# logger.addHandler(handler)
 
-#if not discord.opus.is_loaded():
-    # the 'opus' library here is opus.dll on windows
-    # or libopus.so on linux in the current directory
-    # you should replace this with the location the
-    # opus library is located in and with the proper filename.
-    # note that on windows this DLL is automatically provided for you
-    #discord.opus.load_opus('opus')
-    #discord.opus.load_opus('/usr/lib/x86_64-linux-gnu/libopus.so.0')
+# create a file handler
+handler = logging.FileHandler('/var/log/steven.log')
+handler.setLevel(logging.INFO)
 
+# create a logging format
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
+# add the handlers to the logger
+my_logger.addHandler(handler)
 
 class Nullogs(discord.Client):
     def __init__(self, *args, **kwargs):
@@ -47,7 +37,7 @@ class Nullogs(discord.Client):
             for c in g.text_channels:
                 if c.name == self.config["log_channel"]:
                     self.text_channel = c
-                    break
+        my_logger.warning('Found channel')
 
     async def on_voice_state_update(self, member, before, after):
         msg = []
@@ -87,7 +77,8 @@ class Nullogs(discord.Client):
                     message = ' and '.join([", ".join(msg[:-1]), msg[-1]])
                 send_str = member.display_name + ' ' + message
                 my_logger.warning(send_str)
-                self.text_channel.send(send_str)
+                res = await self.text_channel.send(send_str)
+                x = 1
 
 
 config = ConfigObj(".env")
